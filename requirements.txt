@@ -1,0 +1,7 @@
+Flask
+psycopg2
+uWSGI
+werkzeug
+SQLAlchemy
+Flask-Migrate
+Flask-HTTPAuth

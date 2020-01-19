@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  flask:
+    image: webapp-flask
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+    depends_on:
+      - db
+    environment:
+      - FLASK_APP=auth_app.py
+      - FLASK_DEBUG=1
+      - 'RUN=flask run --host=0.0.0.0 --port=80'
+
+  nginx:
+    image: webapp-nginx
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    ports:
+      - 5000:80
+    depends_on:
+      - flask
+
+  db:
+    image: "postgres"
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: '123'
+      POSTGRES_DB: 'flask_db'
+
+volumes:
+  dbdata:

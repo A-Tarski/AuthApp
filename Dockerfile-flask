@@ -1,0 +1,20 @@
+FROM python:3
+
+ENV APP /app
+RUN mkdir $APP
+WORKDIR $APP
+
+EXPOSE 5000
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY /app ./app
+COPY config.py app.conf app.ini auth_app.py ./
+COPY migrations migrations
+
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \
+    && ln -s /usr/local/bin/docker-entrypoint.sh /
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD [ "uwsgi", "--ini", "app.ini" ]
